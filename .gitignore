@@ -5,6 +5,8 @@ obj/
 # Angular
 node_modules/
 dist/
+.angular/
+coverage/
 
 # VS Code
 .vscode/
@@ -13,5 +15,5 @@ dist/
 .DS_Store
 Thumbs.db
 
-# Environment
+# Env
 .env
