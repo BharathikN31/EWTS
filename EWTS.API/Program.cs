@@ -88,8 +88,21 @@ builder.Services.AddAuthentication(options =>
         
     };
 });
-
+// 🔹 CORS - allow Angular dev server
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularDev", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 var app = builder.Build();
+
+// 🔹 CORS must come before Authentication/Authorization
+app.UseCors("AllowAngularDev");
+
 // 🔹 Middleware Order (VERY IMPORTANT)
 app.UseAuthentication();
 app.UseAuthorization();

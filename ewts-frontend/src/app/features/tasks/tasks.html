@@ -1,0 +1,74 @@
+<div class="tasks-container">
+  <header>
+    <h2>My Tasks</h2>
+    <button (click)="showCreateForm.set(!showCreateForm())">
+      {{ showCreateForm() ? 'Cancel' : '+ New Task' }}
+    </button>
+  </header>
+
+  @if (showCreateForm()) {
+    <form (ngSubmit)="createTask()" class="create-form">
+      <input
+        type="text"
+        placeholder="Title"
+        name="title"
+        [(ngModel)]="newTask.title"
+        required
+      />
+      <textarea
+        placeholder="Description"
+        name="description"
+        [(ngModel)]="newTask.description"
+        required
+      ></textarea>
+      <select
+  name="assignedToUserId"
+  [(ngModel)]="newTask.assignedToUserId"
+  required
+>
+  <option value="" disabled selected>Assign to...</option>
+  @for (user of users(); track user.id) {
+    <option [value]="user.id">{{ user.name }} ({{ user.email }})</option>
+  }
+</select>
+      <button type="submit">Create Task</button>
+    </form>
+  }
+
+  @if (errorMessage()) {
+    <p class="error">{{ errorMessage() }}</p>
+  }
+
+  @if (isLoading()) {
+    <p>Loading tasks...</p>
+  } @else if (myTasks().length === 0) {
+    <p>No tasks assigned yet.</p>
+  } @else {
+    <ul class="task-list">
+      @for (task of myTasks(); track task.id) {
+        <li class="task-item">
+          <div class="task-info">
+            <strong>{{ task.title }}</strong>
+            <p>{{ task.description }}</p>
+            <span class="status status-{{ task.status }}">
+              {{ statusLabel(task.status) }}
+            </span>
+          </div>
+
+          <div class="task-actions">
+            @if (task.status !== TaskItemStatus.InProgress) {
+              <button (click)="updateStatus(task.id, TaskItemStatus.InProgress)">
+                Mark In Progress
+              </button>
+            }
+            @if (task.status !== TaskItemStatus.Completed) {
+              <button (click)="updateStatus(task.id, TaskItemStatus.Completed)">
+                Mark Completed
+              </button>
+            }
+          </div>
+        </li>
+      }
+    </ul>
+  }
+</div>

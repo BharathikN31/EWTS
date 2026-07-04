@@ -56,5 +56,14 @@ namespace EWTS.API.Controllers
         {
             return Ok("Admin or Manager can access");
         }
+
+        // 🔹 LIST ALL USERS (for assignee dropdowns) — any authenticated user
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var result = await _userService.GetAllAsync();
+            return Ok(result);
+        }
     }
 }

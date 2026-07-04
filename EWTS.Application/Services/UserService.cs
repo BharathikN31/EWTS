@@ -50,20 +50,20 @@ namespace EWTS.Application.Services
         }
 
         // 🔹 LOGIN
-public async Task<string> LoginAsync(LoginDto dto)
-{
-    var user = await _userRepository.GetByEmailAsync(dto.Email);
+        public async Task<string> LoginAsync(LoginDto dto)
+        {
+            var user = await _userRepository.GetByEmailAsync(dto.Email);
 
-    if (user == null)
-        throw new Exception("Invalid email or password");
+            if (user == null)
+                throw new Exception("Invalid email or password");
 
-    var isValid = _passwordHasher.Verify(dto.Password, user.PasswordHash);
+            var isValid = _passwordHasher.Verify(dto.Password, user.PasswordHash);
 
-    if (!isValid)
-        throw new Exception("Invalid email or password");
+            if (!isValid)
+                throw new Exception("Invalid email or password");
 
-    return _jwtService.GenerateToken(user);
-}
+            return _jwtService.GenerateToken(user);
+        }
         // 🔹 GET USER BY ID
         public async Task<UserDto> GetByIdAsync(Guid id)
         {
@@ -79,6 +79,18 @@ public async Task<string> LoginAsync(LoginDto dto)
                 Email = user.Email,
                 Role = user.Role
             };
+        }
+        public async Task<List<UserDto>> GetAllAsync()
+        {
+            var users = await _userRepository.GetAllAsync();
+
+            return users.Select(u => new UserDto
+            {
+                Id = u.Id,
+                Name = u.Name,
+                Email = u.Email,
+                Role = u.Role
+            }).ToList();
         }
     }
 }

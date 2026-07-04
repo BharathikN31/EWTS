@@ -1,0 +1,16 @@
+@if (isLoggedIn) {
+  <nav class="navbar">
+    <a routerLink="/dashboard" class="brand">EWTS</a>
+
+    <div class="nav-links">
+      <a routerLink="/dashboard">Dashboard</a>
+      <a routerLink="/tasks">My Tasks</a>
+
+      @if (isManagerOrAdmin) {
+        <a routerLink="/workflow">Approvals</a>
+      }
+
+      <button (click)="logout()">Logout</button>
+    </div>
+  </nav>
+}

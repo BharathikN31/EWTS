@@ -1,0 +1,70 @@
+<div class="workflow-container">
+  <header>
+    <h2>Approvals & Workflow</h2>
+  </header>
+
+  <div class="filter-bar">
+    <label for="statusFilter">Filter by status:</label>
+    <select id="statusFilter" [(ngModel)]="filterStatus" (ngModelChange)="onFilterChange()">
+      <option value="">All</option>
+      <option [value]="TaskItemStatus.Pending">Pending</option>
+      <option [value]="TaskItemStatus.InProgress">In Progress</option>
+      <option [value]="TaskItemStatus.Completed">Completed</option>
+    </select>
+  </div>
+
+  @if (errorMessage()) {
+    <p class="error">{{ errorMessage() }}</p>
+  }
+
+  @if (successMessage()) {
+    <p class="success">{{ successMessage() }}</p>
+  }
+
+  @if (isLoading()) {
+    <p>Loading tasks...</p>
+  } @else if (allTasks().length === 0) {
+    <p>No tasks found.</p>
+  } @else {
+    <ul class="task-list">
+      @for (task of allTasks(); track task.id) {
+        <li class="task-item">
+          <div class="task-info">
+            <strong>{{ task.title }}</strong>
+            <p>{{ task.description }}</p>
+            <span class="status status-{{ task.status }}">
+              {{ statusLabel(task.status) }}
+            </span>
+          </div>
+
+          @if (task.status === TaskItemStatus.Completed) {
+            <div class="approval-actions">
+              <input
+                type="text"
+                placeholder="Comments (optional)"
+                [(ngModel)]="commentsByTask[task.id]"
+                [name]="'comments-' + task.id"
+              />
+              <div class="approval-buttons">
+                <button
+                  class="approve-btn"
+                  (click)="approve(task.id, ApprovalStatus.Approved)"
+                >
+                  ✅ Approve
+                </button>
+                <button
+                  class="reject-btn"
+                  (click)="approve(task.id, ApprovalStatus.Rejected)"
+                >
+                  ❌ Reject
+                </button>
+              </div>
+            </div>
+          } @else {
+            <p class="not-ready">Awaiting completion before approval</p>
+          }
+        </li>
+      }
+    </ul>
+  }
+</div>

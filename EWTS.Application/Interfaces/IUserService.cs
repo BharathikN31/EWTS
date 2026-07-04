@@ -7,5 +7,6 @@ namespace EWTS.Application.Interfaces
         Task<UserDto> RegisterAsync(CreateUserDto dto);
         Task<string> LoginAsync(LoginDto dto);
         Task<UserDto> GetByIdAsync(Guid id);
+        Task<List<UserDto>> GetAllAsync();  
     }
 }

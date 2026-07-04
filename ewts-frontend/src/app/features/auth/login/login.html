@@ -1,0 +1,39 @@
+<div class="login-container">
+  <h2>EWTS Login</h2>
+
+  <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        [(ngModel)]="credentials.email"
+        required
+        email
+        #emailField="ngModel"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        [(ngModel)]="credentials.password"
+        required
+      />
+    </div>
+
+    @if (errorMessage()) {
+      <p class="error">{{ errorMessage() }}</p>
+    }
+
+    <button type="submit" [disabled]="loginForm.invalid || isLoading()">
+      {{ isLoading() ? 'Logging in...' : 'Login' }}
+    </button>
+  </form>
+
+  <p>Don't have an account? <a routerLink="/register">Register here</a></p>
+</div>
