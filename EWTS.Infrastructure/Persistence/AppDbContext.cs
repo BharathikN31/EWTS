@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using EWTS.Domain.Entities;
-using Microsoft.Identity.Client;
 namespace EWTS.Infrastructure.Persistence
 {
     public class AppDbContext : DbContext
@@ -20,11 +19,17 @@ namespace EWTS.Infrastructure.Persistence
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Approval>()
-                .HasOne(a => a.ApprovedByUser)
-                .WithMany()
-                .HasForeignKey(a => a.ApprovedByUserId)
-                .OnDelete(DeleteBehavior.Restrict); // 🔥 FIX HERE
+            modelBuilder.Entity<TaskItem>()
+    .HasOne(t => t.AssignedToUser)
+    .WithMany()
+    .HasForeignKey(t => t.AssignedToUserId)
+    .OnDelete(DeleteBehavior.Restrict);
+
+modelBuilder.Entity<Approval>()
+    .HasOne(a => a.Task)
+    .WithMany()
+    .HasForeignKey(a => a.TaskId)
+    .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

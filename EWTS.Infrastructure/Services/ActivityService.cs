@@ -27,20 +27,6 @@ namespace EWTS.Infrastructure.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task LogActivityAsync(Guid userId, string action, string description)
-{
-    Console.WriteLine("🔥 Activity Log Triggered");
-
-    var log = new ActivityLog
-    {
-        Id = Guid.NewGuid(),
-        UserId = userId,
-        Action = action,
-        Description = description
-    };
-
-    await _context.ActivityLogs.AddAsync(log);
-    await _context.SaveChangesAsync();
-}
+        
     }
 }

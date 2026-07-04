@@ -10,9 +10,10 @@ namespace EWTS.Application.Services
         private readonly IActivityService _activityService;
         private readonly ITaskRepository _taskRepository;
 
-        public TaskService(ITaskRepository taskRepository)
+        public TaskService(ITaskRepository taskRepository,IActivityService activityService)
         {
             _taskRepository = taskRepository;
+            _activityService = activityService;
         }
 
         public async Task<TaskDto> CreateAsync(CreateTaskDto dto)
@@ -27,11 +28,11 @@ namespace EWTS.Application.Services
 
             var created = await _taskRepository.CreateAsync(task);
 
-await _activityService.LogAsync(
-    created.AssignedToUserId,
-    "Task Created",
-    $"Task '{created.Title}' assigned"
-);
+            await _activityService.LogAsync(
+                created.AssignedToUserId,
+                "Task Created",
+                $"Task '{created.Title}' assigned"
+            );
 
             return new TaskDto
             {
@@ -41,7 +42,7 @@ await _activityService.LogAsync(
                 Status = created.Status,
                 AssignedToUserId = created.AssignedToUserId
             };
-           
+
 
         }
 
@@ -87,14 +88,14 @@ await _activityService.LogAsync(
 
             task.Status = dto.Status;
 
-await _taskRepository.UpdateAsync(task);
-
-await _activityService.LogAsync(
-    userId,
-    "Task Updated",
-    $"Task status changed to {task.Status}"
-);
             await _taskRepository.UpdateAsync(task);
+
+            await _activityService.LogAsync(
+                userId,
+                "Task Updated",
+                $"Task status changed to {task.Status}"
+            );
+            
 
             return new TaskDto
             {
@@ -105,7 +106,7 @@ await _activityService.LogAsync(
                 AssignedToUserId = task.AssignedToUserId
             };
 
-            
+
         }
 
         public async Task<List<TaskDto>> GetMyTasksAsync(Guid userId)
@@ -195,15 +196,9 @@ await _activityService.LogAsync(
 
             return "Approval processed successfully";
 
-           
+
         }
 
-        public TaskService(
-    ITaskRepository taskRepository,
-    IActivityService activityService)
-{
-    _taskRepository = taskRepository;
-    _activityService = activityService;
-}
+
     }
 }

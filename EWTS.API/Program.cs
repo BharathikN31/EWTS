@@ -32,7 +32,7 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "Enter: Bearer {your JWT token}"
+        Description = "Enter your JWT token only (no 'Bearer ' prefix)"
     });
 
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -85,11 +85,11 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
         ValidAudience = builder.Configuration["JwtSettings:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(key)
+        
     };
 });
 
 var app = builder.Build();
-
 // 🔹 Middleware Order (VERY IMPORTANT)
 app.UseAuthentication();
 app.UseAuthorization();
