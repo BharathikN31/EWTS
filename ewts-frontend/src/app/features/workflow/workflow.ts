@@ -4,12 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TaskService } from '../../core/services/task';
 import { Auth } from '../../core/services/auth';
+import { ActivityService } from '../../core/services/activity';
 import {
   TaskItem,
   TaskItemStatus,
   ApprovalStatus,
   ApproveTaskDto
 } from '../../shared/models/task.model';
+import { ActivityLog } from '../../shared/models/activity.model';
 
 @Component({
   selector: 'app-workflow',
@@ -20,9 +22,11 @@ import {
 })
 export class Workflow implements OnInit {
   allTasks = signal<TaskItem[]>([]);
+  activityLogs = signal<ActivityLog[]>([]);
   errorMessage = signal<string>('');
   successMessage = signal<string>('');
   isLoading = signal<boolean>(false);
+  showActivityLog = signal<boolean>(false);
 
   TaskItemStatus = TaskItemStatus;
   ApprovalStatus = ApprovalStatus;
@@ -30,7 +34,11 @@ export class Workflow implements OnInit {
   filterStatus: TaskItemStatus | '' = '';
   commentsByTask: Record<string, string> = {};
 
-  constructor(private taskService: TaskService, private authService: Auth) {}
+  constructor(
+    private taskService: TaskService,
+    private authService: Auth,
+    private activityService: ActivityService
+  ) {}
 
   ngOnInit(): void {
     this.loadTasks();
@@ -49,6 +57,20 @@ export class Workflow implements OnInit {
         this.errorMessage.set('Failed to load tasks.');
         this.isLoading.set(false);
       }
+    });
+  }
+
+  toggleActivityLog(): void {
+    this.showActivityLog.set(!this.showActivityLog());
+    if (this.showActivityLog() && this.activityLogs().length === 0) {
+      this.loadActivityLog();
+    }
+  }
+
+  loadActivityLog(): void {
+    this.activityService.getRecent().subscribe({
+      next: (logs: ActivityLog[]) => this.activityLogs.set(logs),
+      error: (err: HttpErrorResponse) => this.errorMessage.set('Failed to load activity log.')
     });
   }
 

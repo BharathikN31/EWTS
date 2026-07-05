@@ -81,3 +81,11 @@ header {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+.task-title-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.task-title-link:hover strong {
+  color: #2563eb;
+}

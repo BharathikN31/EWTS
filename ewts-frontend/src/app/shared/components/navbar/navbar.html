@@ -10,6 +10,12 @@
         <a routerLink="/workflow">Approvals</a>
       }
 
+      @if (userRole() === 'Admin') {
+        <a routerLink="/admin/create-user">Create User</a>
+      }
+
+      <a routerLink="/profile">Profile</a>
+
       <button (click)="logout()">Logout</button>
     </div>
   </nav>

@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
-import { CreateUserDto, LoginDto, LoginResponse, User } from '../../shared/models/user.model';
+import { CreateUserDto, LoginDto, LoginResponse, User, UserRole } from '../../shared/models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -51,6 +51,9 @@ export class Auth {
       return null;
     }
   }
+  getById(id: string): Observable<User> {
+  return this.http.get<User>(`${this.apiUrl}/${id}`);
+}
 
   getRoleFromToken(): string | null {
     const token = this.getToken();
@@ -61,5 +64,16 @@ export class Auth {
     } catch {
       return null;
     }
+
+    
   }
+
+  createUserWithRole(dto: {
+  name: string;
+  email: string;
+  password: string;
+  role: UserRole;
+}): Observable<User> {
+  return this.http.post<User>(`${this.apiUrl}/create`, dto);
+}
 }

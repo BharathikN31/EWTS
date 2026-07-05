@@ -67,4 +67,26 @@
       }
     </ul>
   }
+<hr />
+
+  <div class="activity-section">
+    <button (click)="toggleActivityLog()">
+      {{ showActivityLog() ? 'Hide' : 'Show' }} Activity Log
+    </button>
+
+    @if (showActivityLog()) {
+      @if (activityLogs().length === 0) {
+        <p>No activity recorded yet.</p>
+      } @else {
+        <ul class="activity-list">
+          @for (log of activityLogs(); track log.id) {
+            <li>
+              <strong>{{ log.action }}</strong> — {{ log.description }}
+              <span class="activity-time">{{ log.createdAt | date:'short' }}</span>
+            </li>
+          }
+        </ul>
+      }
+    }
+  </div>
 </div>

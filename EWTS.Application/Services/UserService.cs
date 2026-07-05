@@ -92,5 +92,70 @@ namespace EWTS.Application.Services
                 Role = u.Role
             }).ToList();
         }
+
+        // 🔹 ADMIN-ONLY: create a user with any role
+public async Task<UserDto> CreateUserWithRoleAsync(CreateUserWithRoleDto dto)
+{
+    var existingUser = await _userRepository.GetByEmailAsync(dto.Email);
+
+    if (existingUser != null)
+        throw new Exception("User already exists");
+
+    var user = new User
+    {
+        Id = Guid.NewGuid(),
+        Name = dto.Name,
+        Email = dto.Email,
+        PasswordHash = _passwordHasher.Hash(dto.Password),
+        Role = dto.Role,
+        CreatedAt = DateTime.UtcNow
+    };
+
+    await _userRepository.AddAsync(user);
+
+    return new UserDto
+    {
+        Id = user.Id,
+        Name = user.Name,
+        Email = user.Email,
+        Role = user.Role
+    };
+}
+
+// 🔹 Check if the system has any users at all
+public async Task<bool> HasAnyUsersAsync()
+{
+    var users = await _userRepository.GetAllAsync();
+    return users.Any();
+}
+
+// 🔹 ONE-TIME: bootstrap the very first Admin account
+public async Task<UserDto> BootstrapFirstAdminAsync(CreateUserDto dto)
+{
+    var hasUsers = await HasAnyUsersAsync();
+
+    if (hasUsers)
+        throw new Exception("Setup already completed. Users already exist.");
+
+    var user = new User
+    {
+        Id = Guid.NewGuid(),
+        Name = dto.Name,
+        Email = dto.Email,
+        PasswordHash = _passwordHasher.Hash(dto.Password),
+        Role = UserRole.Admin,
+        CreatedAt = DateTime.UtcNow
+    };
+
+    await _userRepository.AddAsync(user);
+
+    return new UserDto
+    {
+        Id = user.Id,
+        Name = user.Name,
+        Email = user.Email,
+        Role = user.Role
+    };
+}
     }
 }

@@ -1,16 +1,16 @@
 <div class="dashboard-container">
-  <header>
-    <h1>EWTS Dashboard</h1>
-    <button (click)="logout()">Logout</button>
-  </header>
+  <h1>Welcome to EWTS</h1>
 
   <p>Signed in as: <strong>{{ userRole() }}</strong></p>
 
-  <nav class="dashboard-links">
-    <a routerLink="/tasks">📋 My Tasks</a>
-
-    @if (isManagerOrAdmin) {
-      <a routerLink="/workflow">✅ Approvals & Workflow</a>
-    }
-  </nav>
+  @if (isManagerOrAdmin) {
+    <p class="hint">
+      As a {{ userRole() }}, you can review and approve completed tasks from the
+      <strong>Approvals</strong> tab above.
+    </p>
+  } @else {
+    <p class="hint">
+      Check the <strong>My Tasks</strong> tab above to view and update tasks assigned to you.
+    </p>
+  }
 </div>

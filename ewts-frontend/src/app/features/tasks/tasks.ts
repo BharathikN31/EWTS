@@ -6,11 +6,13 @@ import { TaskService } from '../../core/services/task';
 import { Auth } from '../../core/services/auth';
 import { TaskItem, TaskItemStatus, CreateTaskDto } from '../../shared/models/task.model';
 import { User } from '../../shared/models/user.model';
+import { RouterLink } from '@angular/router';
+
 
 @Component({
   selector: 'app-tasks',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,RouterLink],
   templateUrl: './tasks.html',
   styleUrl: './tasks.css'
 })

@@ -65,5 +65,29 @@ namespace EWTS.API.Controllers
             var result = await _userService.GetAllAsync();
             return Ok(result);
         }
+
+        // add if not already present
+
+        // 🔹 ONE-TIME SETUP: bootstrap the first Admin (public, but key-protected + self-disabling)
+        [HttpPost("setup")]
+        public async Task<IActionResult> Setup([FromBody] CreateUserDto dto, [FromHeader(Name = "X-Setup-Key")] string setupKey, [FromServices] IConfiguration configuration)
+        {
+            var expectedKey = configuration["SetupSettings:SetupKey"];
+
+            if (string.IsNullOrEmpty(expectedKey) || setupKey != expectedKey)
+                return Unauthorized(new { message = "Invalid setup key" });
+
+            var result = await _userService.BootstrapFirstAdminAsync(dto);
+            return Ok(result);
+        }
+
+        // 🔹 ADMIN-ONLY: create Manager/Admin/Employee accounts
+        [Authorize(Roles = "Admin")]
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateUserWithRole(CreateUserWithRoleDto dto)
+        {
+            var result = await _userService.CreateUserWithRoleAsync(dto);
+            return Ok(result);
+        }
     }
 }

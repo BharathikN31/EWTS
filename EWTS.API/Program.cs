@@ -98,7 +98,11 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod();
     });
 });
+
+
 var app = builder.Build();
+
+app.UseMiddleware<EWTS.API.Middleware.ExceptionMiddleware>();
 
 // 🔹 CORS must come before Authentication/Authorization
 app.UseCors("AllowAngularDev");

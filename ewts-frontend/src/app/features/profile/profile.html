@@ -1,0 +1,32 @@
+<div class="profile-container">
+  <h2>My Profile</h2>
+
+  @if (isLoading()) {
+    <p>Loading profile...</p>
+  } @else if (errorMessage()) {
+    <p class="error">{{ errorMessage() }}</p>
+  } @else if (profile()) {
+    <div class="profile-card">
+      <div class="avatar">{{ profile()!.name.charAt(0).toUpperCase() }}</div>
+
+      <div class="profile-info">
+        <div class="info-row">
+          <strong>Name</strong>
+          <p>{{ profile()!.name }}</p>
+        </div>
+
+        <div class="info-row">
+          <strong>Email</strong>
+          <p>{{ profile()!.email }}</p>
+        </div>
+
+        <div class="info-row">
+          <strong>Role</strong>
+          <span class="role-badge role-{{ profile()!.role }}">
+            {{ roleLabel(profile()!.role) }}
+          </span>
+        </div>
+      </div>
+    </div>
+  }
+</div>

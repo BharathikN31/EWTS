@@ -1,0 +1,62 @@
+<div class="create-user-container">
+  <h2>Create New User</h2>
+  <p class="subtitle">Admin only — create Employee, Manager, or Admin accounts</p>
+
+  <form (ngSubmit)="onSubmit()" #createUserForm="ngForm">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        [(ngModel)]="newUser.name"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        [(ngModel)]="newUser.email"
+        required
+        email
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        [(ngModel)]="newUser.password"
+        required
+        minlength="6"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="role">Role</label>
+      <select id="role" name="role" [(ngModel)]="newUser.role" required>
+        <option [value]="UserRole.Employee">Employee</option>
+        <option [value]="UserRole.Manager">Manager</option>
+        <option [value]="UserRole.Admin">Admin</option>
+      </select>
+    </div>
+
+    @if (errorMessage()) {
+      <p class="error">{{ errorMessage() }}</p>
+    }
+
+    @if (successMessage()) {
+      <p class="success">{{ successMessage() }}</p>
+    }
+
+    <button type="submit" [disabled]="createUserForm.invalid || isLoading()">
+      {{ isLoading() ? 'Creating...' : 'Create User' }}
+    </button>
+  </form>
+</div>

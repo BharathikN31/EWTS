@@ -1,0 +1,38 @@
+<div class="task-detail-container">
+  <button class="back-btn" (click)="goBack()">← Back to Tasks</button>
+
+  @if (isLoading()) {
+    <p>Loading task...</p>
+  } @else if (errorMessage()) {
+    <p class="error">{{ errorMessage() }}</p>
+  } @else if (task()) {
+    <div class="task-card">
+      <h2>{{ task()!.title }}</h2>
+
+      <span class="status status-{{ task()!.status }}">
+        {{ statusLabel(task()!.status) }}
+      </span>
+
+      <div class="detail-row">
+        <strong>Description</strong>
+        <p>{{ task()!.description }}</p>
+      </div>
+
+      <div class="detail-row">
+        <strong>Assigned To</strong>
+        <p>
+          @if (assignedUser()) {
+            {{ assignedUser()!.name }} ({{ assignedUser()!.email }})
+          } @else {
+            Unknown user
+          }
+        </p>
+      </div>
+
+      <div class="detail-row">
+        <strong>Task ID</strong>
+        <p class="task-id">{{ task()!.id }}</p>
+      </div>
+    </div>
+  }
+</div>
